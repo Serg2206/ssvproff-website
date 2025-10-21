@@ -1,0 +1,10 @@
+<nav class="lang-switcher" style="text-align: right; padding: 10px; background: #f0f0f0; margin-bottom: 20px;">
+  <strong>{{ if eq .Language.Lang "ru" }}Язык{{ else }}Language{{ end }}:</strong>
+  {{ range .Site.Languages }}
+    {{ if eq $.Language.Lang .Lang }}
+      <span style="color: #007BFF; font-weight: bold;">{{ .LanguageName }}</span>
+    {{ else }}
+      <a href="{{ "/" | relLangURL }}" style="margin-left: 10px;">{{ .LanguageName }}</a>
+    {{ end }}
+  {{ end }}
+</nav>

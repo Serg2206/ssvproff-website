@@ -1,0 +1,15 @@
+{{ $data := slice }}
+{{ range $page := .Pages }}
+  {{ if eq $page.Type "publications" }}
+    {{ $item := dict 
+      "title" $page.Title 
+      "content" ($page.Content | plainify)
+      "tags" $page.Params.tags 
+      "year" $page.Params.year 
+      "url" $page.Permalink 
+      "lang" $page.Language.Lang 
+    }}
+    {{ $data = $data | append $item }}
+  {{ end }}
+{{ end }}
+{{ $data | jsonify }}

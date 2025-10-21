@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="{{ .Language.Lang }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ .Title }} | {{ .Site.Title }}</title>
+  <script src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js"></script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    #search-input {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border: 2px solid #007BFF;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+    .result-item {
+      padding: 15px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background: #f9f9f9;
+    }
+    .result-item h3 {
+      margin-top: 0;
+      color: #007BFF;
+    }
+    .result-item a {
+      text-decoration: none;
+      color: inherit;
+    }
+    .result-item a:hover {
+      text-decoration: underline;
+    }
+    small {
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  {{ partial "lang-switcher.html" . }}
+  
+  <h1>{{ if eq .Language.Lang "ru" }}Поиск публикаций{{ else }}Search Publications{{ end }}</h1>
+  
+  <input type="text" id="search-input" placeholder="{{ if eq .Language.Lang "ru" }}Введите запрос...{{ else }}Enter your query...{{ end }}" oninput="handleSearch()">
+  
+  <div id="search-results"></div>
+
+  <script>
+    let indexData = [];
+    
+    // Загрузка данных
+    fetch('/index.json')
+      .then(r => r.json())
+      .then(data => {
+        indexData = data;
+        console.log('Данные загружены:', data.length, 'записей');
+      })
+      .catch(err => console.error("Ошибка загрузки:", err));
+
+    function handleSearch() {
+      const query = document.getElementById("search-input").value.trim().toLowerCase();
+      const container = document.getElementById("search-results");
+      
+      if (!query) {
+        container.innerHTML = "";
+        return;
+      }
+
+      const results = indexData.filter(item =>
+        item.title.toLowerCase().includes(query) ||
+        item.content.toLowerCase().includes(query) ||
+        (item.tags && item.tags.some(tag => tag.toLowerCase().includes(query)))
+      );
+
+      if (results.length === 0) {
+        container.innerHTML = '<p>{{ if eq .Language.Lang "ru" }}Ничего не найдено{{ else }}No results found{{ end }}</p>';
+        return;
+      }
+
+      container.innerHTML = "";
+      results.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "result-item";
+        const excerpt = item.content.substring(0, 200).replace(/\n/g, ' ');
+        div.innerHTML = `
+          <h3><a href="${item.url}">${item.title}</a></h3>
+          <p>${excerpt}...</p>
+          <small>{{ if eq .Language.Lang "ru" }}Год{{ else }}Year{{ end }}: ${item.year || 'N/A'} | {{ if eq .Language.Lang "ru" }}Теги{{ else }}Tags{{ end }}: ${item.tags ? item.tags.join(", ") : 'N/A'}</small>
+        `;
+        container.appendChild(div);
+      });
+    }
+  </script>
+</body>
+</html>

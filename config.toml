@@ -1,0 +1,34 @@
+baseURL = "https://ssvnauka.net"
+title = "SSVproff — Сергей Сушков"
+languageCode = "ru-RU"
+defaultContentLanguage = "ru"
+
+# theme = "papermod"  # Закомментировано: проект использует собственные layouts
+disableKinds = ["taxonomy", "term"]
+
+paginate = 10
+
+enableRobotsTXT = true
+canonifyURLs = true
+
+[params]
+  author = "Сергей В. Сушков"
+  description = "Хирургия, наука, ИИ и цифровые медиа — SSVproff"
+  logo = "/images/logo.svg"
+
+[outputs]
+  home = ["HTML", "JSON"]
+
+[languages]
+  [languages.ru]
+    weight = 1
+    title = "SSVproff — RU"
+    languageName = "Русский"
+    homeTitle = "Главная"
+    contentDir = "content/ru"
+  [languages.en]
+    weight = 2
+    title = "SSVproff — EN"
+    languageName = "English"
+    homeTitle = "Home"
+    contentDir = "content/en"

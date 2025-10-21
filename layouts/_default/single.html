@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="{{ .Language.Lang }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ .Title }} | {{ .Site.Title }}</title>
+  {{ partial "head.html" . }}
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+      line-height: 1.7;
+      color: #333;
+    }
+    h1 {
+      color: #007BFF;
+      border-bottom: 3px solid #007BFF;
+      padding-bottom: 10px;
+    }
+    .metadata {
+      background: #f5f5f5;
+      padding: 15px;
+      border-radius: 5px;
+      margin: 20px 0;
+    }
+    .metadata p {
+      margin: 5px 0;
+    }
+    .content {
+      margin-top: 30px;
+    }
+    .tags {
+      margin-top: 20px;
+    }
+    .tag {
+      display: inline-block;
+      background: #007BFF;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 3px;
+      margin-right: 5px;
+      font-size: 14px;
+    }
+    a {
+      color: #007BFF;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  {{ partial "lang-switcher.html" . }}
+  
+  <article>
+    <h1>{{ .Title }}</h1>
+    
+    <div class="metadata">
+      {{ if .Params.authors }}
+      <p><strong>{{ if eq .Language.Lang "ru" }}Авторы{{ else }}Authors{{ end }}:</strong>
+        {{ range $index, $author := .Params.authors }}
+          {{ if $index }}, {{ end }}
+          {{ $author.name }}
+          {{ if $author.orcid }}<a href="https://orcid.org/{{ $author.orcid }}" target="_blank">(ORCID)</a>{{ end }}
+        {{ end }}
+      </p>
+      {{ end }}
+      
+      {{ if .Params.year }}
+      <p><strong>{{ if eq .Language.Lang "ru" }}Год{{ else }}Year{{ end }}:</strong> {{ .Params.year }}</p>
+      {{ end }}
+      
+      {{ if .Params.journal }}
+      <p><strong>{{ if eq .Language.Lang "ru" }}Журнал{{ else }}Journal{{ end }}:</strong> {{ .Params.journal }}</p>
+      {{ end }}
+      
+      {{ if .Params.doi }}
+      <p><strong>DOI:</strong> <a href="https://doi.org/{{ .Params.doi }}" target="_blank">{{ .Params.doi }}</a></p>
+      {{ end }}
+      
+      {{ if .Params.pdf }}
+      <p><a href="{{ .Params.pdf }}" target="_blank">📄 {{ if eq .Language.Lang "ru" }}Скачать PDF{{ else }}Download PDF{{ end }}</a></p>
+      {{ end }}
+      
+      {{ if .Params.bibtex }}
+      <p><a href="{{ .Params.bibtex }}" target="_blank">📚 {{ if eq .Language.Lang "ru" }}BibTeX{{ else }}BibTeX{{ end }}</a></p>
+      {{ end }}
+    </div>
+    
+    <div class="content">
+      {{ .Content }}
+    </div>
+    
+    {{ if .Params.tags }}
+    <div class="tags">
+      <strong>{{ if eq .Language.Lang "ru" }}Теги{{ else }}Tags{{ end }}:</strong>
+      {{ range .Params.tags }}
+        <span class="tag">{{ . }}</span>
+      {{ end }}
+    </div>
+    {{ end }}
+  </article>
+</body>
+</html>
